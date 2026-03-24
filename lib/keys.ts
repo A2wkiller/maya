@@ -10,6 +10,12 @@ export const KEYS = {
   // Get from: console.groq.com (free)
   groq: process.env.NEXT_PUBLIC_GROQ_KEY || '',
 
+  // Optional - NVIDIA (text fallback)
+  nvidia: process.env.NEXT_PUBLIC_NVIDIA_KEY || '',
+
+  // Optional - OpenRouter (text fallback)
+  openrouter: process.env.NEXT_PUBLIC_OPENROUTER_KEY || '',
+
   // Get from: supabase.com (free 500MB)
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   supabaseAnon: process.env.NEXT_PUBLIC_SUPABASE_ANON || '',
