@@ -60,8 +60,12 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
 
     // Test Supabase
     try {
-      const { error } = await supabase.from('memories').select('id').limit(1)
-      setKeysValid(prev => ({ ...prev, supabase: !error }))
+      if (supabase) {
+        const { error } = await supabase.from('memories').select('id').limit(1)
+        setKeysValid(prev => ({ ...prev, supabase: !error }))
+      } else {
+        setKeysValid(prev => ({ ...prev, supabase: false }))
+      }
     } catch {}
   }
 
@@ -71,36 +75,38 @@ export function OnboardingScreen({ onComplete }: OnboardingProps) {
     localStorage.setItem('maya_onboarding_done', 'true')
 
     // Save to Supabase memories for AI context
-    try {
-      await supabase.from('memories').insert([
-        {
-          content: `User name: ${profile.name}`,
-          category: 'identity',
-          source: 'onboarding'
-        },
-        {
-          content: `Occupation: ${profile.occupation}`,
-          category: 'work',
-          source: 'onboarding'
-        },
-        {
-          content: `Interests: ${profile.interests.join(', ')}`,
-          category: 'personal',
-          source: 'onboarding'
-        },
-        {
-          content: `Businesses/Projects: ${profile.businesses}`,
-          category: 'work',
-          source: 'onboarding'
-        },
-        {
-          content: `Goals: ${profile.goals}`,
-          category: 'goals',
-          source: 'onboarding'
-        },
-      ])
-    } catch (e) {
-      console.log('Could not save to Supabase:', e)
+    if (supabase) {
+      try {
+        await supabase.from('memories').insert([
+          {
+            content: `User name: ${profile.name}`,
+            category: 'identity',
+            source: 'onboarding'
+          },
+          {
+            content: `Occupation: ${profile.occupation}`,
+            category: 'work',
+            source: 'onboarding'
+          },
+          {
+            content: `Interests: ${profile.interests.join(', ')}`,
+            category: 'personal',
+            source: 'onboarding'
+          },
+          {
+            content: `Businesses/Projects: ${profile.businesses}`,
+            category: 'work',
+            source: 'onboarding'
+          },
+          {
+            content: `Goals: ${profile.goals}`,
+            category: 'goals',
+            source: 'onboarding'
+          },
+        ])
+      } catch (e) {
+        console.log('Could not save to Supabase:', e)
+      }
     }
 
     onComplete(profile)
